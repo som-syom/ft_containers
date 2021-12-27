@@ -55,9 +55,12 @@ namespace ft
       // capacity
       size_type size() const { return (this->_end - this->_start); }
       size_type max_size() const { return (this->_alloc.max_size()); }
-      void resize(size_type n, value_type& val = value_type());
+      // void resize(size_type n, value_type& val = value_type())
+      // {
+
+      // }
       size_type capacity() const { return (this->_end_capacity - this->_start); }
-      // bool empty() const;
+      bool empty() const { return this->size() === 0? true : false }
       // void reserve(size_type n);
 
 
