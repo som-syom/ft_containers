@@ -49,8 +49,16 @@ namespace ft
         }
       }
 
-      // virtual ~vector();
-      // vector(vector const&);
+      ~vector() {
+        this->clear();
+        _alloc.deallocate(_start, this->capacity());
+      }
+      // vector(vector const& v)
+      //   : _alloc(v._alloc), _start(v._start),
+      //   _end(v._end), _end_capacity(v._end_capacity)
+      // {
+      //   //insert
+      // }
       // vector& operator=(vector const&);
 
       /* ======================== */
@@ -66,26 +74,27 @@ namespace ft
 
       void resize(size_type n, value_type& val = value_type())
       {
-        if (this.max_size() < n) { // max_size 보다 큰 값이 들어올 때
+        if (this->max_size() < n) { // max_size 보다 큰 값이 들어올 때
           throw (std::length_error("vector::resize"));
-        } else if (this.size() < n) { // 원래 사이즈보다 작게 바꾸려고 할 때
-          while (this.size() > n) {
+        } else if (this->size() < n) { // 원래 사이즈보다 작게 바꾸려고 할 때
+          while (this->size() > n) {
             --_end;
             _alloc.destory(_end);
           }
         } else {
           // insert 추가
+          ;
         }
       }
 
       size_type capacity() const { return (this->_end_capacity - this->_start); }
 
-      bool empty() const { return this->size() === 0 ? true : false }
+      bool empty() const { return this->size() == 0 ? true : false; }
 
       void reserve(size_type n) {
-        if (this.max_size() < n) {
+        if (this->max_size() < n) {
           throw (std::length_error("vector::reserve"));
-        } else if (this.capacity() < n) {
+        } else if (this->capacity() < n) {
           pointer old_start = _start;
           pointer old_end = _end;
           size_type old_size = this->size();
@@ -106,26 +115,78 @@ namespace ft
       /* ======================== */
       //  Element access
       /* ======================== */ 
-      reference       operator[](size_type n);
-      const reference operator[](size_type n) const;
-      reference       at(size_type n);
-      const reference at(size_type n) const;
-      reference       front();
-      const reference front() const;
-      reference       back();
-      const reference back() const;
+      reference       operator[](size_type n) { return (*(_start + n)); }
+
+      const reference operator[](size_type n) const { return (*(_start + n)); }
+
+      reference       at(size_type n) {
+        if (n > this->size() || n < 0) {
+          throw (std::out_of_range("vector::at"));
+        } 
+        return (*(_start + n));
+      }
+
+      const reference at(size_type n) const {
+        if (n > this->size() || n < 0) {
+          throw (std::out_of_range("vector::at"));
+        } 
+        return (*(_start + n));
+      }
+
+      reference       front() { return (*(_start)); }
+
+      const reference front() const { return (*(_start)); }
+
+      reference       back() { return (*(_end - 1)); }
+      const reference back() const { return (*(_end - 1)); }
 
 
       /* ======================== */
       //  Modifiers
       /* ======================== */
       // assign
-      void push_back(const value_type& val);
-      void pop_back();
+
+      void push_back(const value_type& val) {
+        if (_end == _end_capacity) {
+          size_type new_capacity = (this->size() == 0) ? 1 : this->size() * 2;
+          this->reserve(new_capacity);
+        }
+        _alloc.construct(_end, val);
+        _end++;
+      }
+
+      void pop_back() {
+        _alloc.destroy(_end);
+        _end--;
+      }
       // insert
       // erase
-      void swap(ft::vector& x);
-      void clear();
+      void swap(ft::vector& x) {
+        if (x == *this) return ;
+
+        pointer save_start = x._start;
+        pointer save_end = x._end;
+        pointer save_end_capacity = x._end_capacity;
+        allocator_type save_alloc = x._alloc;
+
+        x._start = this->_start;
+        x._end = this->_end;
+        x._end_capacity = this->_end_capacity;
+        x._alloc = this->_alloc;
+
+        this->_start = save_start;
+        this->_end = save_end;
+        this->_end_capacity = save_end_capacity;
+        this->_alloc = save_alloc;
+      }
+
+      void clear() {
+        size_type s = this->size();
+        for (size_type i = 0; i < s; i++) {
+          _end--;
+          _alloc.destroy(_end);
+        }
+      }
 
       /* ======================== */
       //  Allocator
