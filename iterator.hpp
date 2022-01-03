@@ -13,13 +13,39 @@ namespace ft
   struct bidirectional_iterator_tag : public forward_iterator_tag {};
   struct random_access_iterator_tag : public bidirectional_iterator_tag {};
 
-  template<class _Iter>
+  template<bool is_valid, typename T>
+  struct valid_iterator_tag_res {
+    typedef T           type;
+    const static bool   value = is_valid;
+  };
+
+  template<typename T>
+  struct is_input_iterator_tagged : public valid_iterator_tag_res<false, T> {};
+
+  template<>
+  struct is_input_iterator_tagged<ft::random_access_iterator_tag>
+    : public valid_iterator_tag_res<true, ft::random_access_iterator_tag> {};
+  template<>
+  struct is_input_iterator_tagged<ft::input_iterator_tag>
+    : public valid_iterator_tag_res<true, ft::input_iterator_tag> {};
+
+  template<typename T>
+  struct is_ft_iterator_tagged : public valid_iterator_tag_res<false, T> {};
+
+  template<>
+  struct is_ft_iterator_tagged<ft::random_access_iterator_tag>
+    : public valid_iterator_tag_res<true, ft::random_access_iterator_tag> {};
+  template<>
+  struct is_ft_iterator_tagged<ft::input_iterator_tag>
+    : public valid_iterator_tag_res<true, ft::input_iterator_tag> {};
+
+  template<class iterator>
   struct iterator_traits {
-    typedef typename _Iter::iterator_category     iterator_category;
-    typedef typename _Iter::value_type            value_type;
-    typedef typename _Iter::differnce_type        difference_type;
-    typedef typename _Iter::pointer               pointer;
-    typedef typename _Iter::reference             reference;
+    typedef typename iterator::iterator_category     iterator_category;
+    typedef typename iterator::value_type            value_type;
+    typedef typename iterator::difference_type       difference_type;
+    typedef typename iterator::pointer               pointer;
+    typedef typename iterator::reference             reference;
   };
 
   template<class T>
@@ -51,6 +77,33 @@ namespace ft
         typedef Category  iterator_category;
   };
 
+  template<class InputIterator>
+  typename ft::iterator_traits<InputIterator>::difference_type
+      distance(InputIterator first, InputIterator last) {
+    typename ft::iterator_traits<InputIterator>::difference_type ret = 0;
+    while (first != last) {
+      first++;
+      ret++;
+    }
+    return (ret);
+  }
+
+  template<typename T>
+  class InvalidIteratorException : public std::exception {
+    private:
+      std::string _msg;
+    public:
+      InvalidIteratorException() throw() {
+        _msg = "is invalid iterator : " + std::string(typeid(T).name());
+      }
+      InvalidIteratorException(const InvalidIteratorException&) throw() {}
+      InvalidIteratorException& operator=(const InvalidIteratorException&) throw() {}
+      virtual ~InvalidIteratorException() throw() {}
+      virtual const char* what() const throw() {
+        return (_msg.c_str());
+      }
+  };
+
   /*
   ** bidirection iterator
   */
@@ -70,6 +123,7 @@ namespace ft
   /*
   ** random access iterator
   */
+
   template <typename T>
   class random_access_iterator : ft::iterator<ft::random_access_iterator_tag, T> {
 
@@ -85,7 +139,7 @@ namespace ft
       random_access_iterator(pointer elem) : _elem(elem) {}
 
       // copy constructor
-      random_access_iterator(const random_access_iterator& ri) : _elem(ri.elem) {}
+      random_access_iterator(const random_access_iterator& ri) : _elem(ri._elem) {}
 
       // assignation
       random_access_iterator &operator=(const random_access_iterator& ri) {

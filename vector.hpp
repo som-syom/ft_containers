@@ -15,17 +15,18 @@ namespace ft
   template< typename T, typename Alloc = std::allocator<T> >
   class vector
   {
-    typedef T                                             value_type;
-    typedef Alloc                                         allocator_type;
-    typedef typename allocator_type::pointer              pointer;
-    typedef typename allocator_type::const_pointer        const_pointer;
-    typedef typename allocator_type::reference            reference;
-    typedef typename allocator_type::const_reference      const_reference;
-    typedef typename allocator_type::size_type            size_type;
-    typedef ft::random_access_iterator<value_type>        iterator;
-    typedef ft::random_access_iterator<const value_type>  const_iterator;
-    typedef typename ft::iterator_traits<iterator>::difference_type   difference_type;
-    // reverse iterator 추가
+    public:
+      typedef T                                             value_type;
+      typedef Alloc                                         allocator_type;
+      typedef typename allocator_type::pointer              pointer;
+      typedef typename allocator_type::const_pointer        const_pointer;
+      typedef typename allocator_type::reference            reference;
+      typedef typename allocator_type::const_reference      const_reference;
+      typedef typename allocator_type::size_type            size_type;
+      typedef ft::random_access_iterator<value_type>        iterator;
+      typedef ft::random_access_iterator<const value_type>  const_iterator;
+      typedef typename ft::iterator_traits<iterator>::difference_type   difference_type;
+      // reverse iterator 추가
 
     private:
       allocator_type    _alloc;
@@ -81,6 +82,8 @@ namespace ft
           return (this->begin());
         return (_end);
       }
+      // rbegin
+      // rend
 
       /* ======================== */
       //  Capacity
@@ -99,8 +102,7 @@ namespace ft
             _alloc.destroy(_end);
           }
         } else {
-          // insert 추가
-          ;
+          // this->insert(this->end(), n - this->size(), val);
         }
       }
 
@@ -161,9 +163,63 @@ namespace ft
       /* ======================== */
       //  Modifiers
       /* ======================== */
-      // assign
-      void assign(size_type n, const value_type& val) {
+      template<class InputIterator>
+      void assign(InputIterator first, InputIterator last,
+          typename ft::enable_if<!ft::is_integral<InputIterator>::value, 
+          InputIterator>::type* = m_nullptr) {
 
+        bool is_valid;
+        if (!(is_valid = ft::is_ft_iterator_tagged
+            <typename ft::iterator_traits<InputIterator>::iterator_category>::value))
+          throw (ft::InvalidIteratorException
+            <typename ft::is_ft_iterator_tagged
+            <typename ft::iterator_traits<InputIterator>::iterator_category>::type>());
+        this->clear();
+        size_type dist = ft::distance(first, last);
+
+        if (size_type(_end_capacity - _start) >= dist) {
+          for(; &(*first) != &(*last); first++, _end++)
+            _alloc.construct(_end, *first);
+        } else {
+          pointer new_start = pointer();
+          pointer new_end = pointer();
+          pointer new_end_capacity = pointer();
+
+          new_start = _alloc.allocate(dist);
+          new_end = new_start;
+          new_end_capacity = new_start + dist;
+
+          for (; &(*first) != &(*last); first++, new_end++)
+            _alloc.construct(new_end, *first);
+          
+          _alloc.deallocate(_start, this->capacity());
+
+          _start = new_start;
+          _end = new_end;
+          _end_capacity = new_end_capacity;
+        }
+      }
+
+      void assign(size_type n, const value_type& val) {
+        this->clear();
+        if (n == 0) return ;
+        if (size_type(_end_capacity - _start) >= n) {
+          while (n) {
+            _alloc.construct(_end, val);
+            n--;
+            _end++;
+          }
+        } else {
+          _alloc.deallocate(_start, this->capacity());
+          _start = _alloc.allocate(n);
+          _end = _start;
+          _end_capacity = _start + n;
+          while (n) {
+            _alloc.construct(_end, val);
+            n--;
+            _end++;
+          }
+        }
       }
 
       void push_back(const value_type& val) {
