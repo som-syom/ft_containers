@@ -8,19 +8,24 @@
 # include <cstddef>
 # include <tgmath.h>
 # include "./utils.hpp"
+# include "./iterator.hpp"
 
 namespace ft
 {
   template< typename T, typename Alloc = std::allocator<T> >
   class vector
   {
-    typedef T                                         value_type;
-    typedef Alloc                                     allocator_type;
-    typedef typename allocator_type::pointer          pointer;
-    typedef typename allocator_type::const_pointer    const_pointer;
-    typedef typename allocator_type::reference        reference;
-    typedef typename allocator_type::const_reference  const_reference;
-    typedef typename allocator_type::size_type        size_type;
+    typedef T                                             value_type;
+    typedef Alloc                                         allocator_type;
+    typedef typename allocator_type::pointer              pointer;
+    typedef typename allocator_type::const_pointer        const_pointer;
+    typedef typename allocator_type::reference            reference;
+    typedef typename allocator_type::const_reference      const_reference;
+    typedef typename allocator_type::size_type            size_type;
+    typedef ft::random_access_iterator<value_type>        iterator;
+    typedef ft::random_access_iterator<const value_type>  const_iterator;
+    typedef typename ft::iterator_traits<iterator>::difference_type   difference_type;
+    // reverse iterator 추가
 
     private:
       allocator_type    _alloc;
@@ -64,6 +69,18 @@ namespace ft
       /* ======================== */
       //  Iterators
       /* ======================== */ 
+      iterator begin() { return (_start); }
+      const_iterator begin() const { return (_start); }
+      iterator end() {
+        if (this->empty())
+          return (this->begin());
+        return (_end);
+      }
+      const_iterator end() const {
+        if (this->empty())
+          return (this->begin());
+        return (_end);
+      }
 
       /* ======================== */
       //  Capacity
@@ -72,14 +89,14 @@ namespace ft
 
       size_type max_size() const { return (this->_alloc.max_size()); }
 
-      void resize(size_type n, value_type& val = value_type())
+      void resize(size_type n, value_type val = value_type())
       {
         if (this->max_size() < n) { // max_size 보다 큰 값이 들어올 때
           throw (std::length_error("vector::resize"));
-        } else if (this->size() < n) { // 원래 사이즈보다 작게 바꾸려고 할 때
+        } else if (this->size() > n) { // 원래 사이즈보다 작게 바꾸려고 할 때
           while (this->size() > n) {
             --_end;
-            _alloc.destory(_end);
+            _alloc.destroy(_end);
           }
         } else {
           // insert 추가
@@ -145,6 +162,9 @@ namespace ft
       //  Modifiers
       /* ======================== */
       // assign
+      void assign(size_type n, const value_type& val) {
+
+      }
 
       void push_back(const value_type& val) {
         if (_end == _end_capacity) {
@@ -161,7 +181,7 @@ namespace ft
       }
       // insert
       // erase
-      void swap(ft::vector& x) {
+      void swap(vector& x) {
         if (x == *this) return ;
 
         pointer save_start = x._start;
