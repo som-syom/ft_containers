@@ -5,7 +5,7 @@
 # include <cstddef>
 # include <typeinfo>
 
-static class
+const static class
 {
     public:
       template<class T>

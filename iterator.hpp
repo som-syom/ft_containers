@@ -163,9 +163,9 @@ namespace ft
         return (*this);
       }
       // 후위연산자 ++
-      random_access_iterator& operator++(int) {
+      random_access_iterator operator++(int) {
         random_access_iterator ret(*this);
-        operator++();
+        ++(*this);
         return (ret);
       }
       // -- 전위연산자

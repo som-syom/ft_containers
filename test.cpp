@@ -38,6 +38,36 @@ int main() {
 	std::cout << "==============[ VECTOR ]=============" << std::endl;
 	std::cout << "=====================================" << std::endl;
 
+	std::cout << "----------------------- Constructor " << std::endl;
+	{
+		std::cout << "  [ default constructor test ]" << std::endl;
+		std::vector<int> tmp1;
+		ft::vector<int> ft1;
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
+
+		std::cout << "  [ fill constructor test ]" << std::endl;
+		std::vector<int> tmp2(5, 3);
+		ft::vector<int> ft2(5, 3);
+		std::cout << "🟡 std ( size : " << tmp2.size() << " )" << std::endl;
+		print_std_vector(tmp2);
+		std::cout << "🟣 ft  ( size : " << ft2.size() << " )" << std::endl;
+		print_vector(ft2);
+		std::cout << std::endl;
+
+		std::cout << "  [ range constructor test ]" << std::endl;
+		std::cout << "> first(begin + 1), last(end - 1)" << std::endl;
+		std::vector<int> tmp3(tmp2.begin() + 1, tmp2.end() - 1);
+		ft::vector<int> ft3(ft2.begin() + 1, ft2.end() - 1);
+		std::cout << "🟡 std ( size : " << tmp3.size() << " )" << std::endl;
+		print_std_vector(tmp3);
+		std::cout << "🟣 ft  ( size : " << ft3.size() << " )" << std::endl;
+		print_vector(ft3);
+		std::cout << std::endl;
+	}
 	std::cout << "----------------------- Capacity " << std::endl;
 	{
 		std::cout << "  [ size test ]" << std::endl;
@@ -184,7 +214,7 @@ int main() {
 		ft::vector<int> ft1(3, 100);
 		std::vector<int>::iterator iter;
 		ft::vector<int>::iterator ft_iter;
-		// assign 추가
+
 		std::cout << "  [ assign test ]" << std::endl;
 		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
 		print_std_vector(tmp1);
@@ -207,8 +237,19 @@ int main() {
 		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
 		print_vector(ft1);
 		std::cout << std::endl;
+		std::cout << "> (begin() + 1, end() - 1) iterator assign" << std::endl;
+		iter = tmp1.begin() + 1;
+		ft_iter = ft1.begin() + 1;
+		tmp1.assign(iter, tmp1.end() - 1);
+		ft1.assign(ft_iter, ft1.end() - 1);
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
 
 		std::cout << "  [ push_back test ]" << std::endl;
+		std::cout << "> push_back(100)" << std::endl;
 		tmp1.push_back(100);
 		ft1.push_back(100);
 		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
@@ -216,5 +257,78 @@ int main() {
 		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
 		print_vector(ft1);
 		std::cout << std::endl;
+
+		std::cout << "  [ pop_back test ]" << std::endl;
+		std::cout << "> pop_back" << std::endl;
+		tmp1.pop_back();
+		ft1.pop_back();
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
+
+		std::cout << "  [ insert test ]" << std::endl;
+		std::cout << "> insert begin(), 1" << std::endl;
+		tmp1.insert(tmp1.begin(), 1);
+		ft1.insert(ft1.begin(), 1);
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
+
+		std::cout << "> insert begin() + 1, 2, 2" << std::endl;
+		tmp1.insert(tmp1.begin() + 1, 2, 2);
+		ft1.insert(ft1.begin() + 1, 2, 2);
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
+
+		std::cout << "> insert begin() + 3, iter(begin), iter(end)" << std::endl;
+		std::cout << "> iter : [3, 3, 3]" << std::endl;
+		std::vector<int> add1(3, 3);
+		ft::vector<int> add2(3, 3);
+		iter = add1.begin();
+		ft_iter = add2.begin();
+		tmp1.insert(tmp1.begin() + 3, iter, add1.end());
+		ft1.insert(ft1.begin() + 3, ft_iter, add2.end());
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
+
+		std::cout << "  [ erase test ]" << std::endl;
+		std::cout << "> erase begin" << std::endl;
+		tmp1.erase(tmp1.begin() + 3);
+		ft1.erase(ft1.begin() + 3);
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
+
+		std::cout << "> erase end() - 1" << std::endl;
+		tmp1.erase(tmp1.end() - 1);
+		ft1.erase(ft1.end() - 1);
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
+
+		std::cout << "> erase first(begin), last(begin + 3)" << std::endl;
+		tmp1.erase(tmp1.begin(), tmp1.begin() + 3);
+		ft1.erase(ft1.begin(), ft1.begin() + 3);
+		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		print_std_vector(tmp1);
+		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		print_vector(ft1);
+		std::cout << std::endl;
+
+
 	}
 }
