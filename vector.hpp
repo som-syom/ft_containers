@@ -25,6 +25,8 @@ namespace ft
       typedef typename allocator_type::size_type            size_type;
       typedef ft::random_access_iterator<value_type>        iterator;
       typedef ft::random_access_iterator<const value_type>  const_iterator;
+      typedef ft::reverse_iterator<iterator>                reverse_iterator;
+      typedef ft::reverse_iterator<const_iterator>          const_reverse_iterator;
       typedef typename ft::iterator_traits<iterator>::difference_type   difference_type;
       // reverse iterator 추가
 
@@ -92,6 +94,7 @@ namespace ft
         : _alloc(v._alloc), _start(v._start),
         _end(v._end), _end_capacity(v._end_capacity)
       {
+        // 수정
         this->insert(this->begin(), v.begin(), v.end());
       }
 
@@ -119,7 +122,11 @@ namespace ft
         return (_end);
       }
       // rbegin
+      reverse_iterator rbegin() { return (reverse_iterator(this->end())); }
+      const_reverse_iterator rbegin() const { return (reverse_iterator(this->end())); }
       // rend
+      reverse_iterator rend() { return (reverse_iterator(this->begin())); }
+      const_reverse_iterator rend() const { return (reverse_iterator(this->begin())); }
 
       /* ======================== */
       //  Capacity
@@ -144,7 +151,9 @@ namespace ft
 
       size_type capacity() const { return (this->_end_capacity - this->_start); }
 
-      bool empty() const { return this->size() == 0 ? true : false; }
+      bool empty() const { 
+        std::cout << "size : " << this->size() << std::endl;
+        return this->size() == 0 ? true : false; }
 
       void reserve(size_type n) {
         if (this->max_size() < n) {
@@ -375,6 +384,8 @@ namespace ft
             <typename ft::iterator_traits<InputIterator>::iterator_category>::type>());
           
           size_type dist = ft::distance(first, last);
+          std::cout << "test : " << _end_capacity - _end << " , " << dist << std::endl;
+          std::cout << _end - _start << std::endl;
           if (size_type(_end_capacity - _end) >= dist) {
             for (size_type i = 0; i < this->size() - (&(*pos) - _start); i++)
               _alloc.construct(_end - i + dist - 1, *(_end - i - 1));
@@ -407,9 +418,9 @@ namespace ft
             for (size_type i = 0; i < (this->size() - (&(*pos) - _start)); i++)
               _alloc.construct(new_start + (&(*pos) - _start) + dist + i, *(_start + (&(*pos) - _start) + i));
             
-            for (size_type i = 0; i < this->size(); i++)
-              _alloc.destroy(_start + i);
-            _alloc.deallocate(_start, this->capacity());
+            // for (size_type i = 0; i < this->size(); i++)
+            //   _alloc.destroy(_start + i);
+            // _alloc.deallocate(_start, this->capacity());
 
             _start = new_start;
             _end = new_end;
@@ -474,9 +485,62 @@ namespace ft
       allocator_type get_allocator() const { return (_alloc); }
   };
 
+  /* ======================== */
+  //  Non-member function
+  /* ======================== */
   // relational operators
+  // ==
+  template<class T, class Alloc>
+  bool operator==(const ft::vector<T, Alloc>& left, const ft::vector<T, Alloc>& right) {
+    if (left.size() != right.size())
+      return (false);
+    typename ft::vector<T>::const_iterator first1 = left.begin();
+    typename ft::vector<T>::const_iterator first2 = right.begin();
+    while (first1 != left.end()) {
+      if (first2 == right.end() || *first1 != *first2)
+        return (false);
+      ++first1;
+      ++first2;
+    }
+    return (true);
+  }
+
+  // !=
+  template<class T, class Alloc>
+  bool operator!=(const vector<T, Alloc>& left, const vector<T, Alloc>& right) {
+    return (!(left == right));
+  }
+
+  // <
+  template<class T, class Alloc>
+  bool operator<(const vector<T, Alloc>& left, const vector<T, Alloc>& right) {
+    return (ft::lexicographical_compare(left.begin(), left.end(), right.begin(), right.end()));
+  }
+
+  // <=
+  template<class T, class Alloc>
+  bool operator<=(const vector<T, Alloc>& left, const vector<T, Alloc>& right) {
+    return (!(right < left));
+  }
+
+  // >
+  template<class T, class Alloc>
+  bool operator>(const vector<T, Alloc>& left, const vector<T, Alloc>& right) {
+    return (right < left);
+  }
+
+  // >=
+  template<class T, class Alloc>
+  bool operator>=(const vector<T, Alloc>& left, const vector<T, Alloc>& right) {
+    return (!(left < right));
+  }
 
   // swap
+  template<class T, class Alloc>
+  void swap(vector<T, Alloc>& x, vector<T, Alloc>& y) {
+    x.swap(y);
+  }
+
 }
 
 #endif
