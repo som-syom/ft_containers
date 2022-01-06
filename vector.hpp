@@ -473,6 +473,10 @@ namespace ft
       /* ======================== */
       allocator_type get_allocator() const { return (_alloc); }
   };
+
+  // relational operators
+
+  // swap
 }
 
 #endif
