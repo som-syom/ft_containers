@@ -41,7 +41,9 @@ namespace ft
       explicit vector(const allocator_type& alloc = allocator_type())
         : _alloc(alloc), _start(m_nullptr), 
         _end(m_nullptr), _end_capacity(m_nullptr)
-      {}
+      {
+        std::cout << "vector constructor : " << this << std::endl;
+      }
 
       // fill constructor
       explicit vector(size_type size, const value_type& val = value_type(),
@@ -85,7 +87,8 @@ namespace ft
       }
 
       // destructor
-      ~vector() {
+      virtual ~vector() {
+        std::cout << "vector destructor : " << this << std::endl;
         this->clear();
         _alloc.deallocate(_start, this->capacity());
       }
@@ -94,7 +97,8 @@ namespace ft
         : _alloc(v._alloc), _start(v._start),
         _end(v._end), _end_capacity(v._end_capacity)
       {
-        // 수정
+        std::cout << "copy vector : " << this << std::endl;
+        this->clear();
         this->insert(this->begin(), v.begin(), v.end());
       }
 
@@ -152,7 +156,7 @@ namespace ft
       size_type capacity() const { return (this->_end_capacity - this->_start); }
 
       bool empty() const { 
-        std::cout << "size : " << this->size() << std::endl;
+        // std::cout << "size : " << this->size() << std::endl;
         return this->size() == 0 ? true : false; }
 
       void reserve(size_type n) {
