@@ -41,9 +41,7 @@ namespace ft
       explicit vector(const allocator_type& alloc = allocator_type())
         : _alloc(alloc), _start(m_nullptr), 
         _end(m_nullptr), _end_capacity(m_nullptr)
-      {
-        std::cout << "vector constructor : " << this << std::endl;
-      }
+      {}
 
       // fill constructor
       explicit vector(size_type size, const value_type& val = value_type(),
@@ -76,6 +74,7 @@ namespace ft
               <typename ft::iterator_traits<InputIterator>::iterator_category>::type>());
           
           difference_type n = ft::distance(first, last);
+
           _start = _alloc.allocate(n);
           _end_capacity = _start + n;
           _end = _start;
@@ -88,17 +87,17 @@ namespace ft
 
       // destructor
       virtual ~vector() {
-        std::cout << "vector destructor : " << this << std::endl;
         this->clear();
         _alloc.deallocate(_start, this->capacity());
       }
 
+      // Copy
       vector(vector const& v)
-        : _alloc(v._alloc), _start(v._start),
-        _end(v._end), _end_capacity(v._end_capacity)
+        : _alloc(v._alloc),
+				_start(m_nullptr),
+				_end(m_nullptr),
+				_end_capacity(m_nullptr)
       {
-        std::cout << "copy vector : " << this << std::endl;
-        this->clear();
         this->insert(this->begin(), v.begin(), v.end());
       }
 
@@ -156,7 +155,6 @@ namespace ft
       size_type capacity() const { return (this->_end_capacity - this->_start); }
 
       bool empty() const { 
-        // std::cout << "size : " << this->size() << std::endl;
         return this->size() == 0 ? true : false; }
 
       void reserve(size_type n) {
@@ -302,6 +300,7 @@ namespace ft
 
           int next_capacity = (this->size() * 2 > 0) ? this->size() * 2 : 1;
           new_start = _alloc.allocate(next_capacity);
+
           new_end = new_start + this->size() + 1;
           new_end_capacity = new_start + next_capacity;
 
@@ -318,6 +317,7 @@ namespace ft
           }
           if (_start)
             _alloc.deallocate(_start, this->capacity());
+          
           _start = new_start;
           _end = new_end;
           _end_capacity = new_end_capacity;
@@ -347,12 +347,14 @@ namespace ft
 
           int next_capacity = (this->capacity() > 0) ? (int)(this->size() * 2) : 1;
           new_start = _alloc.allocate(next_capacity);
+
           new_end = new_start + this->size() + n;
           new_end_capacity = new_start + next_capacity;
 
           if (size_type(new_end_capacity - new_start) < this->size() + n) {
             if (new_start)
               _alloc.deallocate(new_start, new_end_capacity - new_start);
+
             next_capacity = this->size() + n;
             new_start = _alloc.allocate(next_capacity);
             new_end = new_start + this->size() + n;
@@ -388,8 +390,6 @@ namespace ft
             <typename ft::iterator_traits<InputIterator>::iterator_category>::type>());
           
           size_type dist = ft::distance(first, last);
-          std::cout << "test : " << _end_capacity - _end << " , " << dist << std::endl;
-          std::cout << _end - _start << std::endl;
           if (size_type(_end_capacity - _end) >= dist) {
             for (size_type i = 0; i < this->size() - (&(*pos) - _start); i++)
               _alloc.construct(_end - i + dist - 1, *(_end - i - 1));
@@ -407,8 +407,9 @@ namespace ft
             new_end_capacity = new_start + next_capacity;
 
             if (size_type(new_end_capacity - new_start) < this->size() + dist) {
-              if (new_start)
+              if (new_start) {
                 _alloc.deallocate(new_start, new_end_capacity - new_start);
+              }
               next_capacity = this->size() + dist;
               new_start = _alloc.allocate(next_capacity);
               new_end = new_start + this->size() + dist;
@@ -422,9 +423,9 @@ namespace ft
             for (size_type i = 0; i < (this->size() - (&(*pos) - _start)); i++)
               _alloc.construct(new_start + (&(*pos) - _start) + dist + i, *(_start + (&(*pos) - _start) + i));
             
-            // for (size_type i = 0; i < this->size(); i++)
-            //   _alloc.destroy(_start + i);
-            // _alloc.deallocate(_start, this->capacity());
+            for (size_type i = 0; i < this->size(); i++)
+              _alloc.destroy(_start + i);
+            _alloc.deallocate(_start, this->capacity());
 
             _start = new_start;
             _end = new_end;

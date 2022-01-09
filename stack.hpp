@@ -16,12 +16,9 @@ namespace ft {
 
       // default constructor
       explicit stack(const container_type& ctnr = container_type())
-        : _c(ctnr) {
-          std::cout << "constructor : " << this << std::endl;
-        }
+        : _c(ctnr) { }
       // destroctor
       virtual ~stack() {
-        std::cout << "destructor : " << this << std::endl;
       }
 
       // empty
