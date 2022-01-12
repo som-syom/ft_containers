@@ -361,18 +361,18 @@ int main() {
 		std::cout << "> insert begin(), 1" << std::endl;
 		tmp1.insert(tmp1.begin(), 1);
 		ft1.insert(ft1.begin(), 1);
-		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		std::cout << "🟡 std ( size : " << tmp1.size() << ", cap : " << tmp1.capacity() << " )" << std::endl;
 		print_std_vector(tmp1);
-		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		std::cout << "🟣 ft  ( size : " << ft1.size() << ", cap : " << ft1.capacity() << " )" << std::endl;
 		print_vector(ft1);
 		std::cout << std::endl;
 
 		std::cout << "> insert begin() + 1, 2, 2" << std::endl;
 		tmp1.insert(tmp1.begin() + 1, 2, 2);
 		ft1.insert(ft1.begin() + 1, 2, 2);
-		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		std::cout << "🟡 std ( size : " << tmp1.size() << ", cap : " << tmp1.capacity() << " )" << std::endl;
 		print_std_vector(tmp1);
-		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		std::cout << "🟣 ft  ( size : " << ft1.size() << ", cap : " << ft1.capacity() << " )" << std::endl;
 		print_vector(ft1);
 		std::cout << std::endl;
 
@@ -384,9 +384,9 @@ int main() {
 		ft_iter = add2.begin();
 		tmp1.insert(tmp1.begin() + 3, iter, add1.end());
 		ft1.insert(ft1.begin() + 3, ft_iter, add2.end());
-		std::cout << "🟡 std ( size : " << tmp1.size() << " )" << std::endl;
+		std::cout << "🟡 std ( size : " << tmp1.size() << ", cap : " << tmp1.capacity() << " )" << std::endl;
 		print_std_vector(tmp1);
-		std::cout << "🟣 ft  ( size : " << ft1.size() << " )" << std::endl;
+		std::cout << "🟣 ft  ( size : " << ft1.size() << ", cap : " << ft1.capacity() << " )" << std::endl;
 		print_vector(ft1);
 		std::cout << std::endl;
 

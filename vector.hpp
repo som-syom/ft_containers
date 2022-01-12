@@ -298,7 +298,7 @@ namespace ft
           pointer new_end;
           pointer new_end_capacity;
 
-          int next_capacity = (this->size() * 2 > 0) ? this->size() * 2 : 1;
+          int next_capacity = (this->capacity() * 2 > 0) ? this->capacity() * 2 : 1;
           new_start = _alloc.allocate(next_capacity);
 
           new_end = new_start + this->size() + 1;
@@ -345,7 +345,7 @@ namespace ft
           pointer new_end;
           pointer new_end_capacity;
 
-          int next_capacity = (this->capacity() > 0) ? (int)(this->size() * 2) : 1;
+          int next_capacity = (this->capacity() > 0) ? (int)(this->capacity() * 2) : 1;
           new_start = _alloc.allocate(next_capacity);
 
           new_end = new_start + this->size() + n;
@@ -401,9 +401,9 @@ namespace ft
             pointer new_end;
             pointer new_end_capacity;
 
-            int next_capacity = (this->capacity() > 0) ? (int)(this->size() * 2) : 1;
+            int next_capacity = (this->capacity() > 0) ? (int)(this->capacity() * 2) : 1;
             new_start = _alloc.allocate(next_capacity);
-            new_end = new_start + this->size() + dist;
+            new_end = new_start + this->capacity() + dist;
             new_end_capacity = new_start + next_capacity;
 
             if (size_type(new_end_capacity - new_start) < this->size() + dist) {
@@ -458,8 +458,6 @@ namespace ft
       }
 
       void swap(vector& x) {
-        if (x == *this) return ;
-
         pointer save_start = x._start;
         pointer save_end = x._end;
         pointer save_end_capacity = x._end_capacity;
