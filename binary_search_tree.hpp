@@ -37,7 +37,6 @@ namespace ft {
 
       // to_insert 를 포함한 insert
       ft::pair<iterator, bool> insertPair(value_type to_insert) {
-        node_pointer new_node = _node_alloc.allocate(1);
         node_pointer prev_node = _last_node;
         node_pointer start_node = _last_node->parent;
 
@@ -47,8 +46,10 @@ namespace ft {
         while (start_node != _last_node) {
           int cur_key = start_node->value.first;
 
-          if (cur_key == to_insert.first)
+          // 중복된 key 를 넣으려고 하는 경우
+          if (cur_key == to_insert.first) {
             return(ft::make_pair(iterator(start_node, _last_node), false));
+          }
 
           prev_node = start_node;
           if (to_insert.first > cur_key) {
@@ -59,6 +60,7 @@ namespace ft {
             start_node = start_node->left;
           }
         }
+        node_pointer new_node = _node_alloc.allocate(1);
         _node_alloc.construct(new_node, Node(to_insert, prev_node, _last_node, _last_node));
 
         if (prev_node == _last_node)
