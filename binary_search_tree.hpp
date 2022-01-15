@@ -4,6 +4,7 @@
 # include <iostream>
 # include <string>
 # include "./utils.hpp"
+# include "./binary_search_tree_iterator.hpp"
 
 namespace ft {
   template<class T, class Compare = ft::less<T>, class Node = ft::BST_Node<T>,
@@ -58,7 +59,7 @@ namespace ft {
             start_node = start_node->left;
           }
         }
-        _node_alloc.construct(new_nde, Node(to_insert, prev_node, _last_node, _last_node));
+        _node_alloc.construct(new_node, Node(to_insert, prev_node, _last_node, _last_node));
 
         if (prev_node == _last_node)
           _last_node->parent = new_node;
@@ -103,11 +104,17 @@ namespace ft {
       }
 
       node_pointer      _last_node;
-      node_alloc        _node_alloc
+      node_alloc        _node_alloc;
 
     private:
 
       node_pointer _BST_get_lower_node(node_pointer root) {
+        while (root != _last_node && root->left != _last_node)
+          root = root->left;
+        return (root);
+      }
+
+      node_pointer _BST_get_higher_node(node_pointer root) {
         while (root != _last_node && root->right != _last_node)
           root = root->right;
         return (root);
@@ -149,7 +156,7 @@ namespace ft {
 
         if (to_remove->parent != _last_node) {
           if (to_remove->parent->left == to_remove)
-            to_remove->parent->left = new_node
+            to_remove->parent->left = new_node;
           else if (to_remove->parent->right == to_remove)
             to_remove->parent->right = new_node;
         } else {

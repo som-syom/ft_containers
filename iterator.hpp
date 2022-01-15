@@ -28,6 +28,9 @@ namespace ft
   template<>
   struct is_input_iterator_tagged<ft::input_iterator_tag>
     : public valid_iterator_tag_res<true, ft::input_iterator_tag> {};
+  template<>
+  struct is_input_iterator_tagged<ft::bidirectional_iterator_tag>
+    : public valid_iterator_tag_res<true, ft::bidirectional_iterator_tag> {};
 
   template<typename T>
   struct is_ft_iterator_tagged : public valid_iterator_tag_res<false, T> {};
@@ -38,6 +41,9 @@ namespace ft
   template<>
   struct is_ft_iterator_tagged<ft::input_iterator_tag>
     : public valid_iterator_tag_res<true, ft::input_iterator_tag> {};
+  template<>
+  struct is_ft_iterator_tagged<ft::bidirectional_iterator_tag>
+    : public valid_iterator_tag_res<true, ft::bidirectional_iterator_tag> {};
 
   template<class iterator>
   struct iterator_traits {
