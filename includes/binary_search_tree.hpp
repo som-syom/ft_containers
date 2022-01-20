@@ -25,6 +25,7 @@ namespace ft {
       // default constructor
       Binary_search_tree (const node_alloc& node_alloc_init = node_alloc())
       : _node_alloc(node_alloc_init) {
+        _size = 0;
         _last_node = _node_alloc.allocate(1);
         _node_alloc.construct(_last_node, Node(_last_node, _last_node, _last_node));
       }
@@ -35,6 +36,23 @@ namespace ft {
         _node_alloc.deallocate(_last_node, 1);
       }
 
+      // template<typename T>
+      bool comp_key(int first, int second) {
+          return (first > second);
+      }
+
+      bool comp_key(std::string first, std::string second) {
+        for (size_type i = 0; i < first.size(); i++) {
+          if (first[i] != second[i]) {
+            return (first[i] > second[i]);
+          }
+        }
+        if (first.size() < second.size())
+          return (false);
+        return (true);
+      }
+
+
       // to_insert 를 포함한 insert
       ft::pair<iterator, bool> insertPair(value_type to_insert) {
         node_pointer prev_node = _last_node;
@@ -42,17 +60,14 @@ namespace ft {
 
         bool side = true;
         // true => right, false => left
-
         while (start_node != _last_node) {
-          int cur_key = start_node->value.first;
-
           // 중복된 key 를 넣으려고 하는 경우
-          if (cur_key == to_insert.first) {
+          if (start_node->value.first == to_insert.first) {
             return(ft::make_pair(iterator(start_node, _last_node), false));
           }
 
           prev_node = start_node;
-          if (to_insert.first > cur_key) {
+          if (comp_key(to_insert.first, start_node->value.first)) {
             side = true;
             start_node = start_node->right;
           } else {
@@ -72,7 +87,7 @@ namespace ft {
         
         _last_node->left = _BST_get_lower_node(_last_node->parent);
         _last_node->right = _BST_get_higher_node(_last_node->parent);
-        _last_node->value.first += 1;
+        _size += 1;
         return (ft::make_pair(iterator(new_node, _last_node), true));
       }
 
@@ -99,6 +114,10 @@ namespace ft {
         node_pointer save = this->_last_node;
         this->_last_node = x._last_node;
         x._last_node = save;
+
+        size_t save_size = this->_size;
+        this->_size = x._size;
+        x._size = save_size;
       }
 
       size_type max_size() const {
@@ -107,18 +126,22 @@ namespace ft {
 
       node_pointer      _last_node;
       node_alloc        _node_alloc;
+      size_type         _size;
 
     private:
 
       node_pointer _BST_get_lower_node(node_pointer root) {
         while (root != _last_node && root->left != _last_node)
           root = root->left;
+ 
         return (root);
+        
       }
 
       node_pointer _BST_get_higher_node(node_pointer root) {
         while (root != _last_node && root->right != _last_node)
           root = root->right;
+       
         return (root);
       }
 
@@ -136,7 +159,7 @@ namespace ft {
 
         _last_node->left = _BST_get_lower_node(_last_node->parent);
         _last_node->right = _BST_get_higher_node(_last_node->parent);
-        _last_node->value.first -= 1;
+        _size -= 1;
 
         new_node->parent = node->parent;
 
@@ -178,7 +201,7 @@ namespace ft {
 
         _last_node->left = _BST_get_lower_node(_last_node->parent);
         _last_node->right = _BST_get_higher_node(_last_node->parent);
-        _last_node->value.first -= 1;
+        _size -= 1;
 
         _node_alloc.destroy(to_remove);
         _node_alloc.deallocate(to_remove, 1);

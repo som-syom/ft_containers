@@ -67,6 +67,13 @@ namespace ft {
 
       // copy constructor
       map(const map& x) : _alloc(x._alloc), _comp(x._comp), _bst() {
+        const_iterator test = x.begin();
+        const_iterator test2 = x.end();
+        int i = 0;
+        while (test != test2) {
+          i++;
+          test++;
+        }
         this->insert(x.begin(), x.end());
       }
 
@@ -126,7 +133,7 @@ namespace ft {
       }
       // size
       size_type size() const {
-        return (_bst._last_node->value.first);
+        return (_bst._size);
       }
       // max_size
       size_type max_size() const {
@@ -172,8 +179,10 @@ namespace ft {
             <typename ft::iterator_traits<InputIterator>::iterator_category>::type>());
         
         difference_type n = ft::distance(first, last);
-        while (n--)
-          this->insert(*(first++));
+        while (n--) {
+          this->insert(*(first));
+          first++;
+        }
       }
 
       // erase
@@ -285,7 +294,7 @@ namespace ft {
       /* ======================== */
 
       // get_allocator
-      allocator_type get_allocate() const {
+      allocator_type get_allocator() const {
         return(this->_alloc);
       }
 

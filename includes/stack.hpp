@@ -16,26 +16,26 @@ namespace ft {
 
       // default constructor
       explicit stack(const container_type& ctnr = container_type())
-        : _c(ctnr) { }
+        : c(ctnr) { }
       // destroctor
       virtual ~stack() {
       }
 
       // empty
-      bool empty() const { return (this->_c.empty()); }
+      bool empty() const { return (this->c.empty()); }
 
       // size
-      size_type size() const { return (this->_c.size()); }
+      size_type size() const { return (this->c.size()); }
 
       // top
-      value_type& top() { return (this->_c.back()); }
-      const value_type& top() const { return (this->_c.back()); }
+      value_type& top() { return (this->c.back()); }
+      const value_type& top() const { return (this->c.back()); }
 
       // push
-      void push(const value_type& val) { this->_c.push_back(val); }
+      void push(const value_type& val) { this->c.push_back(val); }
 
       // pop
-      void pop() { this->_c.pop_back(); }
+      void pop() { this->c.pop_back(); }
 
       // friend
       template<class Tn, class ContainerN>
@@ -58,27 +58,27 @@ namespace ft {
                             const ft::stack<Tn, ContainerN>& right);
 
       protected:
-        container_type _c;
+        container_type c;
   };
 
   template<class Tn, class ContainerN>
   bool operator==(const ft::stack<Tn, ContainerN>& left,
-                const ft::stack<Tn, ContainerN>& right) { return (left._c == right._c); }
+                const ft::stack<Tn, ContainerN>& right) { return (left.c == right.c); }
   template<class Tn, class ContainerN>
   bool operator!=(const ft::stack<Tn, ContainerN>& left,
-                const ft::stack<Tn, ContainerN>& right) { return (left._c != right._c); }
+                const ft::stack<Tn, ContainerN>& right) { return (left.c != right.c); }
   template<class Tn, class ContainerN>
   bool operator<(const ft::stack<Tn, ContainerN>& left,
-                const ft::stack<Tn, ContainerN>& right) { return (left._c < right._c); }
+                const ft::stack<Tn, ContainerN>& right) { return (left.c < right.c); }
   template<class Tn, class ContainerN>
   bool operator<=(const ft::stack<Tn, ContainerN>& left,
-                const ft::stack<Tn, ContainerN>& right) { return (left._c <= right._c); }
+                const ft::stack<Tn, ContainerN>& right) { return (left.c <= right.c); }
   template<class Tn, class ContainerN>
   bool operator>(const ft::stack<Tn, ContainerN>& left,
-                const ft::stack<Tn, ContainerN>& right) { return (left._c > right._c); }
+                const ft::stack<Tn, ContainerN>& right) { return (left.c > right.c); }
   template<class Tn, class ContainerN>
   bool operator>=(const ft::stack<Tn, ContainerN>& left,
-                const ft::stack<Tn, ContainerN>& right) { return (left._c >= right._c); }
+                const ft::stack<Tn, ContainerN>& right) { return (left.c >= right.c); }
 
 }
 

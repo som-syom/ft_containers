@@ -17,7 +17,7 @@ namespace ft {
 
       // default constructor
       BST_iterator(const Compare& comp = Compare())
-        : _node(), _last_node(), _comp() {}
+        : _node(), _last_node(), _comp(comp) {}
       
       // node pointer constructor
       BST_iterator(T* node_p, T* last_node, const Compare& comp = Compare())
@@ -89,7 +89,7 @@ namespace ft {
 
         if (_node->left == _last_node) {
           cursor = _node->parent;
-          while (cursor != _last_node && _comp(cursor->value.first, _node->value.first))
+          while (cursor != _last_node && !_comp(cursor->value.first, _node->value.first))
             cursor = cursor->parent;
           _node = cursor;
         } else if (cursor == _last_node) {
@@ -131,7 +131,7 @@ namespace ft {
 
       // default constructor
       BST_const_iterator(const Compare& comp = Compare())
-        : _node(), _last_node(), _comp() {}
+        : _node(), _last_node(), _comp(comp) {}
       
       // node pointer constructor
       BST_const_iterator(T* node_p, T* last_node, const Compare& comp = Compare())
